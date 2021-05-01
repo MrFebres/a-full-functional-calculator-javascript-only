@@ -1,62 +1,58 @@
-//
-
-var Calculadora = {
-  actualizarResultado: function(nuevoResultado) {
-    this.mostrarEnPantalla(nuevoResultado)
-  },
-  calcularResultado: function() {
-    var acumulado = this.arregloDeOperaciones[0]
-    for (var i = 1; i < this.arregloDeOperaciones.length; i += 2) {
-      var operacion = this.arregloDeOperaciones[i]
-      var siguienteNumero = this.arregloDeOperaciones[i + 1]
+const Calculadora = {
+  actualizarResultado: (nuevoResultado) => { this.mostrarEnPantalla(nuevoResultado) },
+  calcularResultado: () => {
+    let acumulado = this.arregloDeOperaciones[0]
+    for (let i = 1; i < this.arregloDeOperaciones.length; i += 2) {
+      let operacion = this.arregloDeOperaciones[i]
+      let siguienteNumero = this.arregloDeOperaciones[i + 1]
       acumulado = this[operacion](acumulado, siguienteNumero)
     }
     this.actualizarResultado(acumulado)
     this.arregloDeOperaciones = [acumulado]
   },
-  resetearVariables: function() {
+  resetearVariables: () => {
     this.arregloDeOperaciones = [0]
     this.pusoPunto = false
   },
-  resetearCalculadora: function() {
+  resetearCalculadora: () => {
     this.resetearVariables()
     this.mostrarEnPantalla(0)
   },
-  mostrarEnPantalla: function(numero) {
+  mostrarEnPantalla: (numero) => {
     document.getElementById('display').innerHTML = numero.toString().substring(0, 8)
   },
-  iniciarAnimaciones: function(){
-    function apretarTecla() {
+  iniciarAnimaciones: () => {
+    const apretarTecla = () => {
       this.style.transform = 'scale(0.95, 0.95)'
     }
 
-    function liberarTecla() {
+    const liberarTecla = () => {
       this.style.transform = 'scale(1, 1)'
     }
 
-    document.querySelectorAll('.tecla').forEach(function(tecla) {
+    document.querySelectorAll('.tecla').forEach(tecla => {
       tecla.addEventListener('mousedown', apretarTecla)
       tecla.addEventListener('mouseup', liberarTecla)
       tecla.addEventListener('onkeypress', apretarTecla)
       tecla.addEventListener('onkeyup', liberarTecla)
     })
   },
-  init: function() {
-    var calculadora = this
+  init: () => {
+    let calculadora = this
     calculadora.iniciarAnimaciones()
-    var operaciones = ['mas', 'menos', 'por', 'dividido']
+    let operaciones = ['mas', 'menos', 'por', 'dividido']
     calculadora.arregloDeOperaciones = [0]
     pusoPunto = false
 
-    document.querySelectorAll('.tecla').forEach(function(element) {
-      element.addEventListener('click', function() {
-        var tecla = this.id
-        var numero = parseInt(tecla)
-        var valor = 0
-        var ultimaPosicion = calculadora.arregloDeOperaciones.length - 1
+    document.querySelectorAll('.tecla').forEach(element => {
+      element.addEventListener('click', () => {
+        let tecla = this.id
+        let numero = parseInt(tecla)
+        let valor = 0
+        let ultimaPosicion = calculadora.arregloDeOperaciones.length - 1
         if (isNaN(numero)) {
           if (operaciones.includes(tecla)) {
-            var ultimoNumero = calculadora.arregloDeOperaciones[ultimaPosicion]
+            let ultimoNumero = calculadora.arregloDeOperaciones[ultimaPosicion]
             if (tecla === 'dividido' && ultimoNumero === 0) {
               window.alert('No se puede dividir entre cero.')
             }
@@ -70,7 +66,7 @@ var Calculadora = {
             calculadora[tecla]()
           }
         } else {
-          var ultimoValor = calculadora.arregloDeOperaciones[ultimaPosicion]
+          let ultimoValor = calculadora.arregloDeOperaciones[ultimaPosicion]
           if (pusoPunto) {
 
           } else {
@@ -85,34 +81,20 @@ var Calculadora = {
       })
     })
   },
-  on: function(){
-    this.resetearCalculadora()
-  },
-  raiz: function(){
-    console.log('No he definido la raiz aun')
-  },
-  sign: function(){
+  on: () => { this.resetearCalculadora() },
+  raiz: () => { console.log('No he definido la raiz aun') },
+  sign: () => {
     this.arregloDeOperaciones[this.arregloDeOperaciones.length - 1] = this.arregloDeOperaciones[this.arregloDeOperaciones.length - 1] * -1
   },
-  dividido: function(num1, num2){
-    return num1 / num2
-  },
-  por: function(num1, num2){
-    return num1 * num2
-  },
-  menos: function(num1, num2){
-    return num1 - num2
-  },
-  punto: function(){
+  dividido: (num1, num2) => num1 / num2,
+  por: (num1, num2) => num1 * num2,
+  menos: (num1, num2) => num1 - num2,
+  punto: () => {
     // hacer una verga loca
     pusoPunto = true
   },
-  igual: function(){
-    this.calcularResultado()
-  },
-  mas: function(num1, num2){
-    return num1 + num2
-  }
+  igual: () => { this.calcularResultado() },
+  mas: (num1, num2) => num1 + num2
 }
 
 Calculadora.init()
